@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style type="text/css">
+			*{margin: 0;padding: 0;}
+			#all{background: black;box-shadow: -2px -2px 2px seagreen,5px 5px 5px gray;margin: 5px auto;position: relative;width: 800px;height: 600px;}
+			#page{position: absolute;top: 540px;left: 350px;width: 100px;height: 30px;background: hotpink;}
+			#ball{background: cornflowerblue;width: 40px;height: 40px;border-radius: 50%;position: absolute;left: 380px;top:500px}
+			#kuai{height: 150px;}
+			#kuai li{width: 100px;height: 50px;list-style: none;position: absolute;}
+			#score{width: 200px;height: 50px;box-shadow: 5px 5px 5px skyblue;margin-left: 600px;font-size: 25px;color: greenyellow;line-height: 50px;text-align: center;}
+			.nandu{margin-top: 20px;height: 40px;width: 100px;border-radius: 10px 5px;background: hotpink;text-align: center;line-height: 40px;position: absolute;left: 100px;}
+			#nandu1{top: 200px;}
+			#nandu2{top:300px}
+			#nandu3{top: 400px;}
+			#wenzi{position: absolute;top: 300px;left: 50%;width: 200px;height: 50px;text-align: center;line-height: 50px;background: sandybrown;opacity: 0.8;margin-left: -100px;display: none;}
+			#niu{position: absolute;top: 150px;right: 0px;font-size: 20px;color: cadetblue;width: 250px;height: 50px;text-align: left;line-height: 50px;}
+		</style>
+	</head>
+	<body onkeydown="change()">
+		<div id="score">当前得分:<span>0</span></div>
+		<div id="all">
+			<ul id="kuai">
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+			<div id="ball">
+				
+			</div>
+			<div id="page">	
+				
+			</div>
+		</div>
+		<div id="wenzi">你就这水平？点击重新开始</div>
+		<div id="niu"></div>
+		<div id="nandu1" class="nandu">简单模式</div>
+		<div id="nandu2" class="nandu">困难模式</div>
+		<div id="nandu3" class="nandu">地狱模式</div>
+	</body>
+	<script>
+		var lis=document.getElementById("kuai").getElementsByTagName("li");
+		var kaishi=document.getElementById("kaishi");
+		var ball=document.getElementById("ball");
+		var page=document.getElementById("page");
+		var all=document.getElementById("all");
+		var nandu1=document.getElementById("nandu1");
+		var nandu2=document.getElementById("nandu2");
+		var nandu3=document.getElementById("nandu3");
+		var score=document.getElementById("score").getElementsByTagName("span")[0];
+		var wenzi=document.getElementById("wenzi");
+		var niu=document.getElementById("niu");
+		var posx=true;
+		var posy=true;
+		var timer=null;
+		var k=0;
+		var z=0;
+		var panduan=false;
+		var panduan1;
+		var panduan2=false;
+		var zanmei=["你真牛","你这么吊你媳妇儿知道吗","大神，收我为徒","我就默默的看着你装b"]
+		for(var i=0;i<lis.length;i++)
+		{
+			var color=Math.floor((Math.random()*10000000)+6581375).toString(16);
+			lis[i].style.background="#"+color;
+			if(i<8)
+			{
+				lis[i].style.left=i*100+"px";
+				lis[i].style.top=0;
+			}
+			else if(i<16)
+			{
+				lis[i].style.left=(i-8)*100+"px";
+				lis[i].style.top=50+"px";
+			}
+			else if(i<24)
+			{
+				lis[i].style.left=(i-16)*100+"px";
+				lis[i].style.top=100+"px";
+			}
+		}	
+		nandu1.onclick=function()
+		{   
+			clearInterval(timer);
+			panduan1=true;
+			timer=setInterval(function()
+			{
+				move(10,11)
+			},50)
+		}
+		nandu2.onclick=function()
+		{   
+			clearInterval(timer);
+			panduan1=true;
+			timer=setInterval(function()
+			{
+				move(12,13)
+			},50)
+		}
+		nandu3.onclick=function()
+		{   
+			clearInterval(timer);
+			panduan1=true;
+			timer=setInterval(function()
+			{
+				move(15,20)
+			},50)
+		}
+
+		function move(a,b)
+		{    
+			if(posx)
+			{
+				ball.style.left=ball.offsetLeft+a+"px";
+				if(ball.offsetLeft>=all.offsetWidth-40)
+				{
+					posx=false;
+				}
+			}
+			
+			else{
+				ball.style.left=ball.offsetLeft-a+"px";
+				if(ball.offsetLeft<=0)
+				{
+					posx=true;
+				}
+			}
+			if(posy)
+			{
+				ball.style.top=ball.offsetTop-b+"px";
+				for(var j=0;j<lis.length;j++)
+				{
+					if(ball.offsetTop<=lis[j].offsetTop+50 && ball.offsetLeft+40>=lis[j].offsetLeft &&ball.offsetLeft<=lis[j].offsetLeft+60)
+					{
+						posy=false;						
+						k=j;
+						panduan=true;
+						
+						
+					}
+				}
+				
+			}
+			
+			else{
+				ball.style.top=ball.offsetTop+b+"px";
+				if(ball.offsetTop+40>=page.offsetTop && ball.offsetLeft+40>=page.offsetLeft &&ball.offsetLeft<=page.offsetLeft+100 && ball.offsetTop+30<page.offsetTop)
+				{   
+					posy=true;
+				}
+				if(ball.offsetTop>=560)
+				{
+					panduan1=false;
+					wenzi.style.display="block";
+					ball.style.display="none"
+					clearInterval(timer);
+					
+				}
+			}
+		
+			if(panduan)
+			{
+				lis[k].style.display="none";
+				score.innerHTML=parseInt(score.innerHTML)+5;
+				for(var i=1;i<5;i++)
+				{
+					if(score.innerHTML==i*15)
+					{   
+						panduan2=true;
+						niu.innerHTML=zanmei[i-1];
+					}
+				}
+				panduan=false;
+			}
+			if(panduan2)
+			{   
+				console.log(1);
+				setTimeout(function()
+				{
+					niu.innerHTML="";
+				},3000)
+				panduan2=false;
+			}								
+		}
+		
+		
+		function change()
+		{
+			var asc=event.keyCode;
+			switch(asc)
+			{
+				case 65:
+					if(page.offsetLeft>30 && page.offsetLeft<700 &&panduan1)
+					{
+						page.style.left=page.offsetLeft-30+"px";
+					}				
+					break;
+				case 68:
+					if(page.offsetLeft>0 && page.offsetLeft<=675 &&panduan1)
+					{
+						page.style.left=page.offsetLeft+30+"px";
+					}
+					break;
+			}
+		}
+		wenzi.onclick=function()
+		{
+			window.location.reload();
+		}
+		
+	</script>
+</html>
